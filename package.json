@@ -9,7 +9,7 @@
   },
   "repository": {
   	"type": "git",
-  	"url": "https://github.com/kigiri/tupac.git",
+  	"url": "https://github.com/kigiri/tupac.git"
   },
   "dependencies": {
     "yargs": "^6.5.0"
