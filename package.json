@@ -1,0 +1,17 @@
+{
+  "name": "tupac",
+  "version": "0.0.1",
+  "description": "Ghetto bundler",
+  "main": "index.js",
+  "license": "MIT",
+  "bin": {
+    "tupac": "bin/tupac.js"
+  },
+  "repository": {
+  	"type": "git",
+  	"url": "https://github.com/kigiri/tupac.git",
+  },
+  "dependencies": {
+    "yargs": "^6.5.0"
+  }
+}
