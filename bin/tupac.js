@@ -4,6 +4,8 @@
 
 var colors     = require('colors'),
     os         = require('os'),
+    WSServer   = require('ws').Server,
+    watch      = require('node-watch'),
     httpServer = require('http-server'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
@@ -20,8 +22,8 @@ if (argv.h || argv.help) {
     '',
     'options:',
     '  -E --entry   javascript application entrypoint [./app.js]',
+    '  -w --watch   watch changes and enable hot module replacement [true]',
     '  -t --title   index title',
-    '  -h --hot     hot module replacement',
     '  -p           Port to use [8080]',
     '  -a           Address to use [0.0.0.0]',
     '  -d           Show directory listings [true]',
@@ -96,6 +98,9 @@ else {
 }
 
 function listen(port) {
+  var canonicalHost = host === '0.0.0.0' ? '127.0.0.1' : host,
+      protocol      = ssl ? 'https://' : 'http://';
+
   var options = {
     root: argv._[0],
     cache: argv.c,
@@ -103,13 +108,15 @@ function listen(port) {
     autoIndex: argv.i,
     gzip: argv.g || argv.gzip,
     entry: argv.E || argv.entry,
-    hot: argv.h || argv.hot,
+    hot: argv.w || argv.watch,
     title: argv.t || argv.title,
     robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
+    before: [],
     logFn: logger.request,
-    proxy: proxy
-  };
+    proxy: proxy,
+    url: protocol + canonicalHost + ':' + port.toString()
+,  };
 
   if (argv.cors) {
     options.cors = true;
@@ -126,23 +133,17 @@ function listen(port) {
   }
 
   const indexContent = getIndex(options)
-
-  options.before = [
-    function (req, res) {
-      if (req.url === '/') {
-        res.writeHead(200, { 'Content-Type': 'text/html' })
-        res.end(indexContent)
-        return
-      }
-      res.emit('next');
-    }   
-  ]
+  const mime = { 'Content-Type': 'text/html' }
+  options.before.push(function (req, res) {
+    if (req.url === '/') {
+      res.writeHead(200, mime)
+      return res.end(indexContent)
+    }
+    res.emit('next')
+  })
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
-    var canonicalHost = host === '0.0.0.0' ? '127.0.0.1' : host,
-        protocol      = ssl ? 'https://' : 'http://';
-
     logger.info(['Starting up http-server, serving '.yellow,
       server.root.cyan,
       ssl ? (' through'.yellow + ' https'.cyan) : '',
@@ -150,7 +151,7 @@ function listen(port) {
     ].join(''));
 
     if (argv.a && host !== '0.0.0.0') {
-      logger.info(('  ' + protocol + canonicalHost + ':' + port.toString()).green);
+      logger.info(('  ' + options.url).green);
     }
     else {
       Object.keys(ifaces).forEach(function (dev) {
@@ -174,6 +175,21 @@ function listen(port) {
       );
     }
   });
+
+  if (!options.hot) return
+  global.server = server.server
+  const wss = new WSServer({ server: server.server })
+  const broadcast = data => wss.clients.forEach(c => c.send(data))
+  const root = options.root || '.'
+  console.log('watching for changes on', root)
+  watch(root, filename => {
+    if (/\.js$/.test(filename) && !/node_modules/.test(filename)) {
+      console.log('broadcasting changes on', filename)
+      broadcast(filename.slice(0, -3))
+    } else {
+      console.log('skipping changes on', filename)
+    }
+  })
 }
 
 if (process.platform === 'win32') {

@@ -15,7 +15,7 @@ This will install `tupac` globally so that it may be run from the command line
 ## Available Options:
 `-E` or `--entry` javascript app entry file (defaults to app.js)
 
-`-h` or `--hot` enable websocket server and watch changes for hot module reload
+`-w` or `--watch` enable websocket server and watch changes for hot module reload (defaults to true, 2pac is always hot)
 
 `-t` or `--title` index file title
 

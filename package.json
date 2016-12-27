@@ -12,6 +12,8 @@
     "url": "https://github.com/kigiri/tupac.git"
   },
   "dependencies": {
-    "http-server": "^0.9.0"
+    "http-server": "^0.9.0",
+    "node-watch": "^0.4.1",
+    "ws": "^1.1.1"
   }
 }

@@ -73,6 +73,10 @@ mkdirp@0.5.x:
   dependencies:
     minimist "0.0.8"
 
+node-watch@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/node-watch/-/node-watch-0.4.1.tgz#d0947d54a995f91135db4056b68722c6d7c322ad"
+
 opener@~1.4.0:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/opener/-/opener-1.4.2.tgz#b32582080042af8680c389a499175b4c54fff523"
@@ -83,6 +87,10 @@ optimist@0.6.x:
   dependencies:
     minimist "~0.0.1"
     wordwrap "~0.0.2"
+
+options@>=0.0.5:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/options/-/options-0.0.6.tgz#ec22d312806bb53e731773e7cdaefcf1c643128f"
 
 portfinder@0.4.x:
   version "0.4.0"
@@ -99,6 +107,10 @@ requires-port@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
 
+ultron@1.0.x:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/ultron/-/ultron-1.0.2.tgz#ace116ab557cd197386a4e88f4685378c8b2e4fa"
+
 union@~0.4.3:
   version "0.4.6"
   resolved "https://registry.yarnpkg.com/union/-/union-0.4.6.tgz#198fbdaeba254e788b0efcb630bc11f24a2959e0"
@@ -112,3 +124,10 @@ url-join@^1.0.0:
 wordwrap@~0.0.2:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-0.0.3.tgz#a3d5da6cd5c0bc0008d37234bbaf1bed63059107"
+
+ws@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.1.tgz#082ddb6c641e85d4bb451f03d52f06eabdb1f018"
+  dependencies:
+    options ">=0.0.5"
+    ultron "1.0.x"
