@@ -108,7 +108,7 @@ function listen(port) {
     autoIndex: argv.i,
     gzip: argv.g || argv.gzip,
     entry: argv.E || argv.entry,
-    hot: argv.w || argv.watch,
+    hot: !argv.w || argv.watch,
     title: argv.t || argv.title,
     robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
@@ -186,8 +186,6 @@ function listen(port) {
     if (/\.js$/.test(filename) && !/node_modules/.test(filename)) {
       console.log('broadcasting changes on', filename)
       broadcast(filename.slice(0, -3))
-    } else {
-      console.log('skipping changes on', filename)
     }
   })
 }

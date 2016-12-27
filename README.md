@@ -1,5 +1,5 @@
 # tupac
-`tupac` Mad easy ghetto bundler
+`tupac` Mad easy ghetto bundler (2pac ur JS)
 
 ![](https://github.com/kigiri/tupac/raw/master/poster.jpg)
 
