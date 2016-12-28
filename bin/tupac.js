@@ -8,7 +8,9 @@ var colors     = require('colors'),
     watch      = require('node-watch'),
     httpServer = require('http-server'),
     portfinder = require('portfinder'),
+    path       = require('path'),
     opener     = require('opener'),
+    pkgCache   = require('../lib/lazyPackageCache'),
     getIndex   = require('../lib/getIndex'),
     argv       = require('optimist')
       .boolean('cors')
@@ -115,8 +117,10 @@ function listen(port) {
     before: [],
     logFn: logger.request,
     proxy: proxy,
-    url: protocol + canonicalHost + ':' + port.toString()
-,  };
+    url: protocol + canonicalHost + ':' + port.toString(),
+  };
+
+  const root = options.root || '.'
 
   if (argv.cors) {
     options.cors = true;
@@ -133,11 +137,23 @@ function listen(port) {
   }
 
   const indexContent = getIndex(options)
-  const mime = { 'Content-Type': 'text/html' }
+  const mimeHTML = { 'Content-Type': 'text/html' }
+  const mimeJS = { 'Content-Type': 'application/javascript' }
   options.before.push(function (req, res) {
-    if (req.url === '/') {
-      res.writeHead(200, mime)
+    const url = req.url
+    if (url === '/') {
+      res.writeHead(200, mimeHTML)
       return res.end(indexContent)
+    } else if (/node_modules/.test(url)) {
+      const start = url.lastIndexOf('node_modules')
+      const end = url.lastIndexOf('.js')
+      const key = path.join(root, url.slice(start, end))
+      logger.info('MODULE ', key.slice('13').yellow)
+      return pkgCache(key).then(file => {
+        res.writeHead(200, mimeJS)
+        res.end(file)
+      }).catch(err => res.emit('next'))
+      // fallback to normal behaviour
     }
     res.emit('next')
   })
@@ -180,7 +196,6 @@ function listen(port) {
   global.server = server.server
   const wss = new WSServer({ server: server.server })
   const broadcast = data => wss.clients.forEach(c => c.send(data))
-  const root = options.root || '.'
   console.log('watching for changes on', root)
   watch(root, filename => {
     if (/\.js$/.test(filename) && !/node_modules/.test(filename)) {
