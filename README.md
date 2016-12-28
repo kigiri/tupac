@@ -51,10 +51,9 @@ Implement also all the options from http-server
   - !! NOT FOR PRODUCTION !!
 
 ## FAQ:
-##### Q. wat about css dog ?!
-I like to use [glamor](https://github.com/threepointone/glamor) but any css-in-js alternative should do the job
+#### Q. wat about css dog ?!
+A. I like to use [glamor](https://github.com/threepointone/glamor) but any css-in-js alternative should do the job
 
-##### Q. No jsx ?! Are you out of your mind ???!
-¯\_(ツ)_/¯
-
+#### Q. No jsx ?! Are you out of your mind ???!
+A. ¯\\\_(ツ)\_/¯
 *try hyperscript and hyperscript-helpers. I made my own version of those tools that I should release one day, soon.*
