@@ -6,27 +6,28 @@ Only one condition : Just pure javascript.
 
 
 # Installing:
-
-     npm install tupac -g
-
+```shell
+npm install tupac -g
+```
 This will install `tupac` globally so that it may be run from the command line
 
 ## usage
-     # create your project folder
-     mkdir my-thug-project-js && cd "$_"
+```shell
+# create your project folder
+mkdir my-thug-project-js && cd "$_"
 
-     # init package.json
-     yarn init -y
+# init package.json
+yarn init -y
 
-     # install some stuff
-     yarn add lodash
+# install some stuff
+yarn add lodash
 
-     # create the entry point
-     echo "document.body.textContent = require('lodash/words')('Reality is wrong. Dreams are for real.').join(' - ')" >> app.js
+# create the entry point
+echo "document.body.textContent = require('lodash/words')('Reality is wrong. Dreams are for real.').join(' - ')" >> app.js
 
-     # start the server
-     tupac
-
+# start the server
+tupac
+```
 You can now edit your JS like a thug and enjoy effortless hotreload and code splitting.
 
 ![](https://github.com/kigiri/tupac/raw/master/poster.jpg)
