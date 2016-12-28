@@ -1,8 +1,7 @@
 # tupac
 `tupac` Mad easy ghetto bundler (2pac ur JS)
-A stupid simple in browser bundler with close to 0 overhead
-and no configuration needed.
-Only one condition : Just pure javascript.
+
+A stupid simple in browser developement bundler with close to 0 overhead and no configuration needed.
 
 
 # Installing:
@@ -57,4 +56,5 @@ A. I like to use [glamor](https://github.com/threepointone/glamor) but any css-i
 
 #### Q. No jsx ?! Are you out of your mind ???!
 A. ¯\\\_(ツ)\_/¯
+
 *try hyperscript and hyperscript-helpers. I made my own version of those tools that I should release one day, soon.*
