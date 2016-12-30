@@ -1,6 +1,7 @@
 const fs = require('fs')
 const ava = require('ava')
 const fetch = require('node-fetch')
+const es2015 = fs.readFileSync(`${__dirname}/../../lib/injected-es2015.js`)
 const injected = fs.readFileSync(`${__dirname}/../../lib/injected.js`)
 const applyTests = (t, tests, testValue) =>
   tests.forEach(({key, args}) => t[key](testValue, ...args))
@@ -8,12 +9,19 @@ const applyTests = (t, tests, testValue) =>
 const handlers = {}
 const fns = eval(`(() => {
   const window = {}
+  ${es2015}
   ${injected}
   modules.a = { exports: Promise.resolve('a') }
   modules.b = { exports: Promise.resolve('b') }
+  modules.es2015 = {
+    exports: Promise.resolve({
+      default: 'default',
+      a: 'a',
+      b: 'b',
+    })
+  }
   return {
     require,
-    inlineRequire,
     normalizeMatch,
     trimNodeModules,
     get,
@@ -58,7 +66,7 @@ const getDefs = type => fs
     const tmp = testStr.split('\n').filter(Boolean)
     const msg = tmp.shift()
     const key = msg.split(' ')[0]
-    const result = eval(tmp.pop())
+    const result = eval(`(${tmp.pop()})`)
     return {
       key,
       msg,

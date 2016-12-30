@@ -10,8 +10,7 @@ module.exports = requirerequire('a')
 
 //@loadScript unsupported parenstack
 module.exports = require(('a'))
-/Unexpected end of input/
-
+/\bUnexpected\b/
 //@loadScript unsupported function call
 module.exports = require((() => 'a')())
-/Unexpected end of input/
+/\bUnexpected\b/

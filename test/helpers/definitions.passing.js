@@ -32,3 +32,20 @@ module.exports = require('a') + require('b')
 const { length } = (require('a') + require('b'))
 module.exports = length
 2
+
+//@loadScript es2015 module import default
+import def from 'es2015'
+export def
+{ def: 'default' }
+//@loadScript es2015 module import destructuring
+import { a } from 'es2015'
+export a
+{ a: 'a' }
+//@loadScript es2015 module export default
+import { a } from 'es2015'
+export default a
+{ default: 'a' }
+//@loadScript es2015 module
+import * as all from 'es2015'
+export all
+{ all: { default: 'default', a: 'a', b: 'b' } }

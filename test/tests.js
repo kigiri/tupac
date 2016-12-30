@@ -8,7 +8,9 @@ handlers({
   ]
 })
 
-passing(({ is }, result) => is(result))
+passing(({ is, deepEqual }, result) => (result && result instanceof Object)
+  ? deepEqual(result)
+  : is(result))
 
 failing((test, result) => test(((t, err) => {
   t.true(err instanceof Error)

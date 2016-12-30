@@ -10,8 +10,8 @@ var colors     = require('colors'),
     portfinder = require('portfinder'),
     path       = require('path'),
     opener     = require('opener'),
-    pkgCache   = require('../lib/lazyPackageCache'),
-    getIndex   = require('../lib/getIndex'),
+    pkgCache   = require('../lib/lazy-package-cache'),
+    getIndex   = require('../lib/get-index'),
     argv       = require('optimist')
       .boolean('cors')
       .argv;
@@ -24,6 +24,7 @@ if (argv.h || argv.help) {
     '',
     'options:',
     '  -E --entry   javascript application entrypoint [./app.js]',
+    '  -v --vanilla disable es2015 modules supports',
     '  -w --watch   watch changes and enable hot module replacement [true]',
     '  -t --title   index title',
     '  -p           Port to use [8080]',
@@ -107,6 +108,7 @@ function listen(port) {
     root: argv._[0],
     cache: argv.c,
     showDir: argv.d,
+    es2015: !(argv.v || argv.vanilla),
     autoIndex: argv.i,
     gzip: argv.g || argv.gzip,
     entry: argv.E || argv.entry,
@@ -118,7 +120,7 @@ function listen(port) {
     logFn: logger.request,
     proxy: proxy,
     url: protocol + canonicalHost + ':' + port.toString(),
-  };
+  }
 
   const root = options.root || '.'
 
@@ -132,8 +134,8 @@ function listen(port) {
   if (ssl) {
     options.https = {
       cert: argv.C || argv.cert || 'cert.pem',
-      key: argv.K || argv.key || 'key.pem'
-    };
+      key: argv.K || argv.key || 'key.pem',
+    }
   }
 
   const indexContent = getIndex(options)
