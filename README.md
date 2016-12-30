@@ -1,32 +1,32 @@
 # tupac
 `tupac` Mad easy ghetto bundler (2pac ur JS)
-A stupid simple in browser bundler with close to 0 overhead
-and no configuration needed.
-Only one condition : Just pure javascript.
+
+A stupid simple in browser developement bundler with close to 0 overhead and no configuration needed.
 
 
 # Installing:
-
-     npm install tupac -g
-
+```shell
+npm install tupac -g
+```
 This will install `tupac` globally so that it may be run from the command line
 
 ## usage
-     # create your project folder
-     mkdir my-thug-project-js && cd "$_"
+```shell
+# create your project folder
+mkdir my-thug-project-js && cd "$_"
 
-     # init package.json
-     yarn init -y
+# init package.json
+yarn init -y
 
-     # install some stuff
-     yarn add lodash
+# install some stuff
+yarn add lodash
 
-     # create the entry point
-     echo "document.body.textContent = require('lodash/words')('Reality is wrong. Dreams are for real.').join(' - ')" >> app.js
+# create the entry point
+echo "document.body.textContent = require('lodash/words')('Reality is wrong. Dreams are for real.').join(' - ')" >> app.js
 
-     # start the server
-     tupac
-
+# start the server
+tupac
+```
 You can now edit your JS like a thug and enjoy effortless hotreload and code splitting.
 
 ![](https://github.com/kigiri/tupac/raw/master/poster.jpg)
@@ -51,10 +51,10 @@ Implement also all the options from http-server
   - !! NOT FOR PRODUCTION !!
 
 ## FAQ:
-##### Q. wat about css dog ?!
-I like to use [glamor](https://github.com/threepointone/glamor) but any css-in-js alternative should do the job
+#### Q. wat about css dog ?!
+A. I like to use [glamor](https://github.com/threepointone/glamor) but any css-in-js alternative should do the job
 
-##### Q. No jsx ?! Are you out of your mind ???!
-¯\_(ツ)_/¯
+#### Q. No jsx ?! Are you out of your mind ???!
+A. ¯\\\_(ツ)\_/¯
 
 *try hyperscript and hyperscript-helpers. I made my own version of those tools that I should release one day, soon.*
