@@ -1,16 +1,36 @@
 const fs = require('fs')
 const ava = require('ava')
-const fns = require('./fns')
-const colors = require('colors')
+const fetch = require('node-fetch')
+const injected = fs.readFileSync(`${__dirname}/../../lib/injected.js`)
 const applyTests = (t, tests, testValue) =>
   tests.forEach(({key, args}) => t[key](testValue, ...args))
+
+const handlers = {}
+const fns = eval(`(() => {
+  const window = {}
+  ${injected}
+  modules.a = { exports: Promise.resolve('a') }
+  modules.b = { exports: Promise.resolve('b') }
+  return {
+    require,
+    inlineRequire,
+    normalizeMatch,
+    trimNodeModules,
+    get,
+    resolvePath,
+    fetchScript,
+    normalizePath,
+    cleanupPath,
+    loadScript,
+  }
+})()`)
 
 const pass = _ => _
 const test = (msg, execTest) => {
   const tests = []
   let assertFn
   ava(msg, t => {
-    const ret = Promise.resolve(execTest(tests.length || t))
+    const ret = Promise.resolve().then(execTest)
     if (tests.length) {
       t.plan(tests.length)
 
@@ -43,16 +63,18 @@ const getDefs = type => fs
       key,
       msg,
       result,
-      script: tmp.join('\n')
+      value: tmp.join('\n')
     }
   })
 
-const passTest = d => test(d.msg, fns[d.key](d))
+const getArgs = d => (handlers[d.key] || (_ => [_]))(d)
+const passTest = d => test(d.msg, () => fns[d.key](...getArgs(d)))
 const engine = (type, eachFn) => getDefs(type)
   .forEach(d => eachFn(passTest(d), d.result))
 
-engine.failing = fn => engine('failing', fn)
-engine.passing = fn => engine('passing', fn)
-
-module.exports = engine
+module.exports = {
+  handlers: h => Object.assign(handlers, h),
+  failing: fn => engine('failing', fn),
+  passing: fn => engine('passing', fn),
+}
 

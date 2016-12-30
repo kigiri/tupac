@@ -1,4 +1,12 @@
-const { failing, passing } = require('./helpers')
+const { failing, passing, handlers } = require('./helpers')
+
+// format arguments parsed from the definition forwarded to the tested function
+handlers({
+  loadScript: ({ value, key, msg }) => [
+    { key, index: 0, dependencies: [] },
+    value,
+  ]
+})
 
 passing(({ is }, result) => is(result))
 
