@@ -67,17 +67,13 @@ if (!argv.s && !argv.silent) {
       var date = utc ? new Date().toUTCString() : new Date();
       if (error) {
         logger.info(
-          '[%s] "%s %s" Error (%s): "%s"',
-          date, req.method.red, req.url.red,
+          '%s %s Error (%s): "%s"',
+          req.method.red, req.url.red,
           error.status.toString().red, error.message.red
         );
       }
       else {
-        logger.info(
-          '[%s] "%s %s" "%s"',
-          date, req.method.cyan, req.url.cyan,
-          req.headers['user-agent']
-        );
+        logger.info('%s %s', req.method.yellow, req.url.cyan);
       }
     }
   };
@@ -150,7 +146,7 @@ function listen(port) {
       const start = url.lastIndexOf('node_modules')
       const end = url.lastIndexOf('.js')
       const key = path.join(root, url.slice(start, end))
-      logger.info('MODULE ', key.slice('13').yellow)
+      logger.info(req.method.yellow, key.slice('13').cyan)
       return pkgCache(key).then(file => {
         res.writeHead(200, mimeJS)
         res.end(file)

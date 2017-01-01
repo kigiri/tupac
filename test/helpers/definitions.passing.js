@@ -9,6 +9,11 @@ module.exports = a
 let a = require('a')
 module.exports = a
 'a'
+//@loadScript handle closure first
+(() => {})()
+let a = require('a')
+module.exports = a
+'a'
 //@loadScript declaration with const
 const a = require('a')
 module.exports = a
@@ -48,4 +53,13 @@ export default a
 //@loadScript es2015 module
 import * as all from 'es2015'
 export all
-{ all: { default: 'default', a: 'a', b: 'b' } }
+{ all: { __esModule: true, default: 'default', a: 'a', b: 'b' } }
+//@loadScript es2015 module export var
+export var a = 'lol'
+{ a: 'lol' }
+//@loadScript es2015 module export let
+export let a = 'lol'
+{ a: 'lol' }
+//@loadScript es2015 module export const
+export const a = 'lol'
+{ a: 'lol' }

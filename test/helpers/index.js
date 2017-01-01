@@ -1,3 +1,5 @@
+'use strict'
+
 const fs = require('fs')
 const ava = require('ava')
 const fetch = require('node-fetch')
@@ -7,29 +9,31 @@ const applyTests = (t, tests, testValue) =>
   tests.forEach(({key, args}) => t[key](testValue, ...args))
 
 const handlers = {}
-const fns = eval(`(() => {
-  const window = {}
+global.window = global
+const fns = eval(`(()=>{
   ${es2015}
   ${injected}
-  modules.a = { exports: Promise.resolve('a') }
-  modules.b = { exports: Promise.resolve('b') }
-  modules.es2015 = {
-    exports: Promise.resolve({
-      default: 'default',
-      a: 'a',
-      b: 'b',
-    })
-  }
+  const _q = (key,exports)=>
+    modules[key]={key,exports,q:Promise.resolve(exports)}
+  _q('loadScript', {})
+  _q('a', 'a')
+  _q('b', 'b')
+  _q('es2015', {
+    __esModule: true,
+    default: 'default',
+    a: 'a',
+    b: 'b',
+  })
   return {
-    require,
-    normalizeMatch,
-    trimNodeModules,
     get,
+    require,
+    loadScript,
     resolvePath,
     fetchScript,
-    normalizePath,
     cleanupPath,
-    loadScript,
+    normalizePath,
+    normalizeMatch,
+    trimNodeModules,
   }
 })()`)
 
@@ -37,8 +41,10 @@ const pass = _ => _
 const test = (msg, execTest) => {
   const tests = []
   let assertFn
+
   ava(msg, t => {
     const ret = Promise.resolve().then(execTest)
+
     if (tests.length) {
       t.plan(tests.length)
 
@@ -78,7 +84,7 @@ const getDefs = type => fs
 const getArgs = d => (handlers[d.key] || (_ => [_]))(d)
 const passTest = d => test(d.msg, () => fns[d.key](...getArgs(d)))
 const engine = (type, eachFn) => getDefs(type)
-  .forEach(d => eachFn(passTest(d), d.result))
+  .forEach(d => eachFn(passTest(d), d))
 
 module.exports = {
   handlers: h => Object.assign(handlers, h),
