@@ -1,6 +1,9 @@
 //@loadScript failing parse extra begining
 module.exports = _require('a')
 /is not defined/
+//@loadScript failing parse extra begining
+module.exports = brequire('a')
+/is not defined/
 //@loadScript failing extra end
 module.exports = require_('a')
 /is not defined/

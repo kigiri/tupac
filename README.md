@@ -4,7 +4,7 @@
 A stupid simple in browser developement bundler with close to 0 overhead and no configuration needed.
 
 
-# Installing:
+## Installing:
 ```shell
 npm install tupac -g
 ```
@@ -12,19 +12,19 @@ This will install `tupac` globally so that it may be run from the command line
 
 ## usage
 ```shell
-# create your project folder
+### create your project folder
 mkdir my-thug-project-js && cd "$_"
 
-# init package.json
+### init package.json
 yarn init -y
 
-# install some stuff
+### install some stuff
 yarn add lodash
 
-# create the entry point
+### create the entry point
 echo "document.body.textContent = require('lodash/words')('Reality is wrong. Dreams are for real.').join(' - ')" >> app.js
 
-# start the server
+### start the server
 tupac
 ```
 You can now edit your JS like a thug and enjoy effortless hotreload and code splitting.
@@ -43,11 +43,26 @@ Implement also all the options from http-server
 
 *see the documentation for [http-server](https://github.com/indexzero/http-server)*
 
+## Browser API:
+### Hot Reload Event
+After a hot reload, the event `hotreload` is triggered from `window`
+```javascript
+window.addEventListener('hotreload', ({ detail: module }) => console.log(module))
+```
+
+### Globals
+All modules are called from `window` and `this` is bound to `window`.
+
+`__tupac_modules__` is an object containing all the module data.
+
+`__tupac_get_default__` is a function that return the exported data (handeling es6 modules)
+
+if not present a mocked `process` is created (some modules failed without it)
+
 ## Notice:
-  - No tests (in very early stage)
-  - Pure JS only (if you need support for more stuff, go webpack)
-  - In browser async compilation of the requires
-  - No support for es6 modules yet
+  - Pure JS only (if you need support for more TypeScript, JSX or esle : go webpack)
+  - In browser async compilation of the requires *(if a module exports a `Promise` it will wait for it's resolve value)*
+  - little support for es6 modules 
   - !! NOT FOR PRODUCTION !!
 
 ## FAQ:
@@ -57,4 +72,4 @@ A. I like to use [glamor](https://github.com/threepointone/glamor) but any css-i
 #### Q. No jsx ?! Are you out of your mind ???!
 A. ¯\\\_(ツ)\_/¯
 
-*try hyperscript and hyperscript-helpers. I made my own version of those tools that I should release one day, soon.*
+*try hyperscript and hyperscript-helpers for react. I made my own version of those tools that I should release one day, soon.*
