@@ -115,7 +115,8 @@ function listen(port) {
     before: [],
     logFn: logger.request,
     proxy: proxy,
-    url: protocol + canonicalHost + ':' + port.toString(),
+    hosts: [],
+    url: protocol + canonicalHost + ':' + port,
   }
 
   const root = options.root || '.'
@@ -134,7 +135,7 @@ function listen(port) {
     }
   }
 
-  const indexContent = getIndex(options)
+  let indexContent = 'reload plz'
   const mimeHTML = { 'Content-Type': 'text/html' }
   const mimeJS = { 'Content-Type': 'application/javascript' }
   options.before.push(function (req, res) {
@@ -166,15 +167,17 @@ function listen(port) {
 
     if (argv.a && host !== '0.0.0.0') {
       logger.info(('  ' + options.url).green);
+      options.hosts.push(options.url)
     }
     else {
-      Object.keys(ifaces).forEach(function (dev) {
-        ifaces[dev].forEach(function (details) {
-          if (details.family === 'IPv4') {
-            logger.info(('  ' + protocol + details.address + ':' + port.toString()).green);
-          }
+      Object.keys(ifaces)
+        .reduce((a, dev) => a.concat(ifaces[dev]), [])
+        .filter(details => details.family === 'IPv4')
+        .map(details => details.address)
+        .forEach(address => {
+          options.hosts.push(protocol + address + ':' + port)
+          logger.info(('  ' + protocol + address + ':' + port.toString()).green);
         });
-      });
     }
 
     if (typeof proxy === 'string') {
@@ -188,6 +191,8 @@ function listen(port) {
         { command: argv.o !== true ? argv.o : null }
       );
     }
+
+    indexContent = getIndex(options)
   });
 
   if (!options.hot) return

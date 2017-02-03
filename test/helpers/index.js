@@ -3,6 +3,8 @@
 const fs = require('fs')
 const ava = require('ava')
 const fetch = require('node-fetch')
+const resolvePath = require('path').resolve
+
 const es2015 = fs.readFileSync(`${__dirname}/../../lib/injected-es2015.js`)
 const injected = fs.readFileSync(`${__dirname}/../../lib/injected.js`)
 const applyTests = (t, tests, testValue) =>
@@ -10,11 +12,18 @@ const applyTests = (t, tests, testValue) =>
 
 const handlers = {}
 global.window = global
+global.document = {
+  createElement: (val) => Object.defineProperty({}, 'href', {
+    get: () => resolvePath(val),
+    set: v => val = v,
+  })
+}
+
 const fns = eval(`(()=>{
   ${es2015}
   ${injected}
   const _q = (key,exports)=>
-    modules[key]={key,exports,q:Promise.resolve(exports)}
+    modules[key]={key,exports,ready:Promise.resolve(exports)}
   _q('loadScript', {})
   _q('a', 'a')
   _q('b', 'b')
