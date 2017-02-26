@@ -192,7 +192,7 @@ function listen(port) {
       );
     }
 
-    indexContent = getIndex(options)
+    getIndex(options).then(index => indexContent = index)
   });
 
   if (!options.hot) return
