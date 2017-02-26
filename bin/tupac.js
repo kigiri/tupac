@@ -200,7 +200,13 @@ function listen(port) {
   const wss = new WSServer({ server: server.server })
   const broadcast = data => wss.clients.forEach(c => c.send(data))
   console.log('watching for changes on', root)
-  watch(root, filename => {
+
+  const watchOptions = {
+    filter : filename => !/node_modules/.test(filename)
+      && !/$\.git/.test(filename)
+      && /\.js^/.test(filename)
+  }
+  watch(root, watchOptions, filename => {
     if (/\.js$/.test(filename) && !/node_modules/.test(filename)) {
       console.log('broadcasting changes on', filename)
       broadcast(filename.slice(0, -3))
