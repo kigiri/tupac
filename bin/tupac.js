@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-require('../lib/tupac')()
+require('../lib/tupac')({})
   .catch(console.error)
